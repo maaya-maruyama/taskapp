@@ -45,11 +45,15 @@ class ViewController: UIViewController,UITableViewDelegate,UISearchBarDelegate, 
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar){
         view.endEditing(true)
         if searchBar.text != nil{
-            taskArray = realm.objects(Task.self).where({$0.category == searchBar.text!}).sorted(byKeyPath: "date", ascending: true)
-            tableView.reloadData() //データソースを更新して，テーブルビューのリロードをかけている
-        }else{
-            taskArray = realm.objects(Task.self).sorted(byKeyPath: "date", ascending: true) //realm.objectが全件取得，全件取得するときはソートして並び順を指定する
-            tableView.reloadData() //無条件の時に元の全件データを取得して表示する
+            if searchBar.text == ""{
+                taskArray = realm.objects(Task.self).sorted(byKeyPath: "date", ascending: true) //realm.objectが全件取得，全件取得するときはソートして並び順を指定する
+                tableView.reloadData() //無条件の時に元の全件データを取得して表示する
+                //何も入れないまま検索しているけど，プログラム上は長さなしの文字列
+            }else{
+                taskArray = realm.objects(Task.self).where({$0.category == searchBar.text!}).sorted(byKeyPath: "date", ascending: true)
+                tableView.reloadData() //データソースを更新して，テーブルビューのリロードをかけている
+                //長さありの文字列で検索しているとき
+            }
         }
     }
     
